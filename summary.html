@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order On The Go - Summary</title>
+  <link rel="stylesheet" href="style1.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📦 Order Summary</h1>
+
+    <section>
+      <p><strong>Name:</strong> <span id="displayName"></span></p>
+      <p><strong>Restaurant:</strong> <span id="displayRestaurant"></span></p>
+      <p><strong>Address:</strong> <span id="displayAddress"></span></p>
+    </section>
+
+    <section>
+      <h2>Items Ordered:</h2>
+      <ul id="orderList"></ul>
+      <p><strong>Total: ₹<span id="finalTotal">0</span></strong></p>
+    </section>
+
+    <button onclick="restartOrder()">Start New Order</button>
+  </div>
+
+  <script>
+    function loadSummary() {
+      const name = localStorage.getItem("username") || "N/A";
+      const restaurant = localStorage.getItem("restaurant") || "N/A";
+      const address = localStorage.getItem("address") || "N/A";
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+      document.getElementById("displayName").textContent = name;
+      document.getElementById("displayRestaurant").textContent = restaurant;
+      document.getElementById("displayAddress").textContent = address;
+
+      const orderList = document.getElementById("orderList");
+      let total = 0;
+      cart.forEach(({ item, price }) => {
+        const li = document.createElement("li");
+        li.textContent = `${item} - ₹${price}`;
+        orderList.appendChild(li);
+        total += price;
+      });
+
+      document.getElementById("finalTotal").textContent = total;
+    }
+
+    function restartOrder() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    window.onload = loadSummary;
+  </script>
+</body>
+</html>

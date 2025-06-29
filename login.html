@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order On The Go - Login</title>
+  <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🍽️ Order On The Go</h1>
+
+    <!-- LOGIN SECTION -->
+    <section>
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Enter your Name">
+    </section>
+
+    <!-- RESTAURANT SELECTION SECTION -->
+    <section>
+      <h2>Select a Restaurant</h2>
+      <input type="text" id="searchBar" placeholder="Search restaurants..." onkeyup="searchRestaurants()">
+      <div class="restaurant-grid" id="restaurantList">
+        <div class="restaurant-item" onclick="selectRestaurant('Spicy Bite')">
+          <img src="spicy bites.jpg" alt="Spicy Bite">
+          <p>Spicy Bite</p>
+          <button onclick="event.stopPropagation(); addToCart('Spicy Bite')">Add</button>
+          <button onclick="event.stopPropagation(); removeFromCart('Spicy Bite')">Remove</button>
+        </div>
+        <div class="restaurant-item" onclick="selectRestaurant('Foodiez')">
+          <img src="foodiez.jpg" alt="Foodiez">
+          <p>Foodiez</p>
+          <button onclick="event.stopPropagation(); addToCart('Foodiez')">Add</button>
+          <button onclick="event.stopPropagation(); removeFromCart('Foodiez')">Remove</button>
+        </div>
+        <div class="restaurant-item" onclick="selectRestaurant('Taste Hub')">
+          <img src="taste hub.png" alt="Taste Hub">
+          <p>Taste Hub</p>
+          <button onclick="event.stopPropagation(); addToCart('Taste Hub')">Add</button>
+          <button onclick="event.stopPropagation(); removeFromCart('Taste Hub')">Remove</button>
+        </div>
+        <div class="restaurant-item" onclick="selectRestaurant('Healthy Heaven')">
+          <img src="healthy heaven.jpg" alt="Healthy Heaven">
+          <p>Healthy Heaven</p>
+          <button onclick="event.stopPropagation(); addToCart('Healthy Heaven')">Add</button>
+          <button onclick="event.stopPropagation(); removeFromCart('Healthy Heaven')">Remove</button>
+        </div>
+      </div>
+    </section>
+
+    <button onclick="goToMenu()">Login</button>
+  </div>
+
+  <script>
+    let selectedRestaurant = "";
+    let cart = JSON.parse(localStorage.getItem("restaurantCart")) || {};
+
+    function selectRestaurant(name) {
+      selectedRestaurant = name;
+      localStorage.setItem("restaurant", name);
+      highlightSelected(name);
+    }
+
+    function highlightSelected(name) {
+      const items = document.querySelectorAll('.restaurant-item');
+      items.forEach(item => {
+        item.classList.remove('selected');
+        if (item.innerText.includes(name)) {
+          item.classList.add('selected');
+        }
+      });
+    }
+
+    function addToCart(name) {
+      cart[name] = (cart[name] || 0) + 1;
+      localStorage.setItem("restaurantCart", JSON.stringify(cart));
+      alert(`${name} added to cart. Quantity: ${cart[name]}`);
+    }
+
+    function removeFromCart(name) {
+      if (cart[name]) {
+        cart[name] -= 1;
+        if (cart[name] <= 0) delete cart[name];
+        localStorage.setItem("restaurantCart", JSON.stringify(cart));
+        alert(`${name} removed from cart.`);
+      } else {
+        alert(`${name} is not in the cart.`);
+      }
+    }
+
+    function goToMenu() {
+      const username = document.getElementById("username").value.trim();
+      if (!username || !selectedRestaurant) {
+        alert("Please enter your name and select a restaurant.");
+        return;
+      }
+      localStorage.setItem("username", username);
+      window.location.href = "menu.html";
+    }
+
+    function searchRestaurants() {
+      const input = document.getElementById("searchBar").value.toLowerCase();
+      const items = document.querySelectorAll('.restaurant-item');
+      items.forEach(item => {
+        const name = item.innerText.toLowerCase();
+        item.style.display = name.includes(input) ? "block" : "none";
+      });
+    }
+  </script>
+
+  <style>
+    .selected {
+      border: 3px solid #6a1b9a;
+      box-shadow: 0 0 10px #ba68c8;
+    }
+    button {
+      margin: 5px;
+      padding: 5px 10px;
+    }
+  </style>
+</body>
+</html>
